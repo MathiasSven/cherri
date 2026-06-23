@@ -2106,7 +2106,7 @@ func apps(args []actionArgument) (apps []map[string]any) {
 	return
 }
 
-var appIdentifierRegex = regexp.MustCompile(`^(.*?)\.(.*?)\.(.*?)$`)
+var appIdentifierRegex = regexp.MustCompile(`^(?:(.*?)\.)?(.*?)\.(.*?)$`)
 
 func replaceAppID(id string) string {
 	makeAppIds()
