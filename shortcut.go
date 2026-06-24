@@ -16,17 +16,17 @@ type ShortcutIcon struct {
 type Shortcut struct {
 	WFWorkflowIcon                       ShortcutIcon     `plist:",omitempty"`
 	WFWorkflowActions                    []ShortcutAction `plist:",omitempty"`
-	WFQuickActionSurfaces                []string         `plist:",omitempty"`
-	WFWorkflowInputContentItemClasses    []string         `plist:",omitempty"`
-	WFWorkflowClientVersion              string           `plist:",omitempty"`
-	WFWorkflowMinimumClientVersion       int              `plist:",omitempty"`
-	WFWorkflowMinimumClientVersionString string           `plist:",omitempty"`
-	WFWorkflowImportQuestions            interface{}      `plist:",omitempty"`
-	WFWorkflowTypes                      []string         `plist:",omitempty"`
-	WFWorkflowOutputContentItemClasses   []string         `plist:",omitempty"`
-	WFWorkflowHasShortcutInputVariables  bool             `plist:",omitempty"`
-	WFWorkflowHasOutputFallback          bool             `plist:",omitempty"`
-	WFWorkflowNoInputBehavior            map[string]any   `plist:",omitempty"`
+	WFQuickActionSurfaces                []string
+	WFWorkflowInputContentItemClasses    []string    `plist:",omitempty"`
+	WFWorkflowClientVersion              string      `plist:",omitempty"`
+	WFWorkflowMinimumClientVersion       int         `plist:",omitempty"`
+	WFWorkflowMinimumClientVersionString string      `plist:",omitempty"`
+	WFWorkflowImportQuestions            interface{} `plist:",omitempty"`
+	WFWorkflowTypes                      []string    `plist:",omitempty"`
+	WFWorkflowOutputContentItemClasses   []string
+	WFWorkflowHasShortcutInputVariables  bool `plist:",omitempty"`
+	WFWorkflowHasOutputFallback          bool
+	WFWorkflowNoInputBehavior            map[string]any `plist:",omitempty"`
 }
 
 var shortcut Shortcut
@@ -60,7 +60,7 @@ type Aggrandizement struct {
 
 type WFDictionaryFieldValueItem struct {
 	WFKey      any `plist:",omitempty"`
-	WFItemType int `plist:",omitempty"`
+	WFItemType int
 	WFValue    any `plist:",omitempty"`
 }
 
@@ -101,7 +101,7 @@ type WFTextTokenString struct {
 
 type WFTextTokenStringValue struct {
 	AttachmentsByRange map[string]Value `plist:"attachmentsByRange,omitempty"`
-	String             string           `plist:"string,omitempty"`
+	String             string           `plist:"string"`
 }
 
 type WFDictionaryFieldValue struct {
@@ -110,7 +110,7 @@ type WFDictionaryFieldValue struct {
 }
 
 type WFDictionaryFieldValueWrapper struct {
-	WFDictionaryFieldValueItems []WFDictionaryFieldValueItem `plist:",omitempty"`
+	WFDictionaryFieldValueItems []WFDictionaryFieldValueItem
 }
 
 type WFArrayValue struct {
@@ -134,7 +134,7 @@ type WFQuantityFieldValue struct {
 }
 
 type WFMenuItem struct {
-	WFItemType int `plist:",omitempty"`
+	WFItemType int
 	WFValue    any `plist:",omitempty"`
 }
 
@@ -149,7 +149,7 @@ type WFConditionValue struct {
 }
 
 type WFConditionParam struct {
-	WFCondition               int             `plist:",omitempty"`
+	WFCondition               int
 	WFInput                   WFInputVariable `plist:",omitempty"`
 	WFConditionalActionString any             `plist:",omitempty"`
 	WFNumberValue             any             `plist:",omitempty"`
