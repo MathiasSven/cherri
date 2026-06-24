@@ -208,6 +208,11 @@ func makeVariableValue(reference *WFActionReference, valueType tokenType, value 
 		addStdAction("dictionary", attachReferenceToParams(map[string]any{
 			"WFItems": makeDictionaryValue(value),
 		}, reference))
+	case Question:
+		var emptyDictionary any = map[string]interface{}{}
+		addStdAction("dictionary", attachReferenceToParams(map[string]any{
+			"WFItems": makeDictionaryValue(&emptyDictionary),
+		}, reference))
 	}
 }
 
@@ -1190,10 +1195,24 @@ func generateImportQuestions() (importQuestions []WFQuestion) {
 			Category:     "Parameter",
 			ActionIndex:  q.actionIndex,
 			Text:         q.text,
-			DefaultValue: q.defaultValue,
+			DefaultValue: importQuestionDefaultValue(q),
 		})
 	}
 	return
+}
+
+func importQuestionDefaultValue(q *question) any {
+	switch q.defaultType {
+	case Dict:
+		return makeDictionaryValue(&q.defaultValue)
+	case String, RawString:
+		return q.defaultValue
+	default:
+		return paramValue(actionArgument{
+			valueType: q.defaultType,
+			value:     q.defaultValue,
+		}, q.defaultType)
+	}
 }
 
 func generateInputContentItems() (inputContentItems []string) {

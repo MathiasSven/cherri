@@ -317,7 +317,13 @@ func lookAheadUntil(until rune) string {
 func collectVariableValue(constant bool, valueType *tokenType, value *any) {
 	collectValue(valueType, value, '\n')
 	if *valueType == Question {
-		parserError(fmt.Sprintf("Illegal reference to import question '%s'. Shortcuts does not support import questions as variable values.", *value))
+		questionIdentifier := (*value).(string)
+		question := questions[questionIdentifier]
+		if !constant || question.defaultType != Dict {
+			parserError(fmt.Sprintf("Illegal reference to import question '%s'. Shortcuts does not support import questions as variable values.", *value))
+		}
+		question.parameter = "WFItems"
+		question.actionIndex = actionIndex
 	}
 
 	var aheadOfValue = lookAheadUntil('\n')
@@ -826,6 +832,10 @@ func collectVariable(constant bool) {
 		parserError("Constants must be initialized with a value.")
 	}
 
+	if valueType != "" && value != nil {
+		actionIndex++
+	}
+
 	tokens = append(tokens, token{
 		typeof:    varType,
 		ident:     identifier,
@@ -837,9 +847,13 @@ func collectVariable(constant bool) {
 		return
 	}
 	if _, found := variables[identifier]; !found {
+		var storedValueType = valueType
+		if valueType == Question {
+			storedValueType = questions[value.(string)].defaultType
+		}
 		variables[identifier] = varValue{
 			variableType: "Variable",
-			valueType:    valueType,
+			valueType:    storedValueType,
 			value:        value,
 			constant:     constant,
 		}
@@ -1093,7 +1107,8 @@ type question struct {
 	parameter    string
 	actionIndex  int
 	text         string
-	defaultValue string
+	defaultType  tokenType
+	defaultValue any
 	used         bool
 }
 
@@ -1116,14 +1131,14 @@ func collectQuestion() {
 	var text = collectString()
 	advance()
 
-	if char != '"' {
-		parserError("Expected question default string value.")
-	}
-	advance()
+	skipWhitespace()
 
-	var defaultValue = collectString()
+	var defaultType tokenType
+	var defaultValue any
+	collectValue(&defaultType, &defaultValue, '\n')
 	questions[identifier] = &question{
 		text:         text,
+		defaultType:  defaultType,
 		defaultValue: defaultValue,
 	}
 }
