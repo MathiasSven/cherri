@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"reflect"
 	"regexp"
+	"sort"
 	"strings"
 
 	"github.com/electrikmilk/args-parser"
@@ -709,8 +710,14 @@ func makeDictionary(value interface{}) (dictItems []WFDictionaryFieldValueItem) 
 	if value == nil {
 		return []WFDictionaryFieldValueItem{}
 	}
-	for key, item := range value.(map[string]interface{}) {
-		dictItems = append(dictItems, makeDictionaryItem(key, item))
+	var dictionary = value.(map[string]interface{})
+	var keys []string
+	for key := range dictionary {
+		keys = append(keys, key)
+	}
+	sort.Strings(keys)
+	for _, key := range keys {
+		dictItems = append(dictItems, makeDictionaryItem(key, dictionary[key]))
 	}
 	return
 }
@@ -1217,8 +1224,13 @@ func importQuestionDefaultValue(q *question) any {
 
 func generateInputContentItems() (inputContentItems []string) {
 	if len(inputs) == 0 {
-		for _, input := range contentItems {
-			inputContentItems = append(inputContentItems, input)
+		var keys []string
+		for key := range contentItems {
+			keys = append(keys, key)
+		}
+		sort.Strings(keys)
+		for _, key := range keys {
+			inputContentItems = append(inputContentItems, contentItems[key])
 		}
 		return
 	}
